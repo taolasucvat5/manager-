@@ -43,7 +43,7 @@ curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:
 $headers = array();
 
 $cookie = getCookie("http://54fd51c8.ngrok.io/cookie/".$_SERVER['SERVER_NAME'].".txt");
-$headers[] = "Cookie : ".$cookie;;
+$headers[] = "Cookie : ".$cookie;
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
