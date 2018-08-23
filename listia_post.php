@@ -38,10 +38,10 @@ $ch = curl_init();
 curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0');
 //$cookie="http://5c909bdf.ngrok.io/cookie/cuong077.txt";
 //$ckfile = tempnam ("http://5c909bdf.ngrok.io/cookie/cuong077.txt", 'cookiename');
-//curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
-//curl_setopt($ch, CURLOPT_COOKIEFILE, $ckfile);
-$cookie = getCookie("http://5c909bdf.ngrok.io/cookie/".$_SERVER['SERVER_NAME'].".txt");
-curl_setopt($ch, CURLOPT_HTTPHEADER, array("Cookie: ".$cookie));
+curl_setopt($ch, CURLOPT_COOKIEJAR, "cookie.txt");
+curl_setopt($ch, CURLOPT_COOKIEFILE, "cookie.txt");
+//$cookie = getCookie("http://5c909bdf.ngrok.io/cookie/".$_SERVER['SERVER_NAME'].".txt");
+//curl_setopt($ch, CURLOPT_HTTPHEADER, array("Cookie: ".$cookie));
 
 switch ($_GET["action"]) {
 	case 'login':
