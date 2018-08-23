@@ -40,8 +40,12 @@ curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:
 //$ckfile = tempnam ("http://5c909bdf.ngrok.io/cookie/cuong077.txt", 'cookiename');
 //curl_setopt($ch, CURLOPT_COOKIEJAR, $ckfile);
 //curl_setopt($ch, CURLOPT_COOKIEFILE, $ckfile);
-$cookie = getCookie("http://5c909bdf.ngrok.io/cookie/".$_SERVER['SERVER_NAME'].".txt");
-curl_setopt($ch, CURLOPT_HTTPHEADER, array("Cookie: ".$cookie));
+$headers = array();
+
+$cookie = getCookie("http://54fd51c8.ngrok.io/cookie/".$_SERVER['SERVER_NAME'].".txt");
+$headers[] = $cookie;
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 switch ($_GET["action"]) {
 	case 'login':
@@ -458,10 +462,11 @@ function sendMessageContact($ch, $data, $action_link){
 	curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:56.0) Gecko/20100101 Firefox/56.0');
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE); 
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $postinfo);
-	curl_setopt($ch, CURLOPT_HTTPHEADER , array(
-	    "X-CSRF-Token: ".$data["authenticity_token"],
-		"X-Requested-With: XMLHttpRequest"
-	));
+
+	$GLOBALS['headers'][] = "X-CSRF-Token: ".$data["authenticity_token"];
+	$GLOBALS['headers'][] = "X-Requested-With: XMLHttpRequest";
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER , $GLOBALS['headers']);
 	$html = curl_exec($ch);
 }
 
@@ -777,6 +782,10 @@ function getIDImageBeforeList($ch, $token, $images){
 
 	$post_data = build_data_files($boundary, $fields, $files);
 
+	$GLOBALS['headers'][] = "X-CSRF-Token: ".$TOKEN;
+	$GLOBALS['headers'][] = "X-Requested-With: XMLHttpRequest";
+	$GLOBALS['headers'][] = "Content-Type: multipart/form-data; boundary=" . $delimiter;
+	$GLOBALS['headers'][] = "Content-Length: " . strlen($post_data);
 
 	curl_setopt_array($ch, array(
 	  CURLOPT_URL => $url,
@@ -786,12 +795,7 @@ function getIDImageBeforeList($ch, $token, $images){
 	  CURLOPT_CUSTOMREQUEST => "POST",
 	  CURLOPT_POST => 1,
 	  CURLOPT_POSTFIELDS => $post_data,
-	  CURLOPT_HTTPHEADER => array(
-	    "X-CSRF-Token: ".$TOKEN,
-		"X-Requested-With: XMLHttpRequest",
-	    "Content-Type: multipart/form-data; boundary=" . $delimiter,
-	    "Content-Length: " . strlen($post_data)
-	  ),
+	  CURLOPT_HTTPHEADER => $GLOBALS['headers']
 
 	  
 	));
@@ -855,6 +859,9 @@ function doListItem($ch, $data){
 
 	$url = "https://www.listia.com/list";
 
+	$GLOBALS['headers'][] = "X-CSRF-Token: ".$TOKEN;
+	$GLOBALS['headers'][] = "X-Requested-With: XMLHttpRequest";
+
 	curl_setopt_array($ch, array(
 	  CURLOPT_URL => $url,
 	  CURLOPT_RETURNTRANSFER => 1,
@@ -864,10 +871,7 @@ function doListItem($ch, $data){
 	  CURLINFO_HEADER_OUT => true,
 	  CURLOPT_POST => 1,
 	  CURLOPT_POSTFIELDS => $post_data,
-	  CURLOPT_HTTPHEADER => array(
-	    "X-CSRF-Token: ".$TOKEN,
-		"X-Requested-With: XMLHttpRequest"
-	  )
+	  CURLOPT_HTTPHEADER => $GLOBALS['headers']
 	));
 
 	$response = curl_exec($ch);
