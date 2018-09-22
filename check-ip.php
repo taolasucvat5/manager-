@@ -1,4 +1,5 @@
 <?php
+//vip
 $url = 'https://www.myip.com/';
  
 // Khởi tạo CURL
